@@ -9,3 +9,5 @@ contact-form-7_input_name — (например your-message) обязателе
 
 Пример:
 [wp_service_table filter_service_category="1с" contact-form-7_id="143" contact-form-7_input_name="your-message"]
+
+Forked from: WT Service Manager
