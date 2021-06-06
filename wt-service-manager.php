@@ -1,6 +1,7 @@
 <?php
 /*
 Plugin Name: Менеджер услуг
+Plugin URI: https://github.com/Donaldismo/WP_ServiceManager/
 Description: Управление услугами и ценами с использованием contact form 7
 Version: 0.2
 Author: Александр Голубин
@@ -283,14 +284,14 @@ class WtServiceManager_
             $price = number_format(get_post_meta($service->ID, 'price', true) , 0, ',', ' ');
             $max = get_post_meta($service->ID, 'max', true);
 
-            echo "<div style='max-width: 520px;padding:8px; overflow: hidden; text-overflow: ellipsis; margin:4px 0px 4px; display:flex;  width:100%; border: 2px solid var(--sp-border-light); background: #fbfbfb;'>
-			<div style='margin-left:4px; text-align: left; margin-right: 8px;'>
+            echo "<div style='max-width: 520px; overflow: hidden; text-overflow: ellipsis; padding: 4px 10px 4px 8px; margin:4px 0px 4px; display:flex; width:100%; border: 2px solid var(--sp-border-light); background: #fbfbfb;'>
+			<div style='margin-top:4px; margin-left:4px; text-align: left; margin-right: 8px;'>
 			<p name='name' style='margin-bottom: 0px;'>$service->post_title</p>
-			<small>$service->post_content</small>
+			<small style = 'display: flex;'>$service->post_content</small>
 			</div>
 			<div style='white-space: nowrap; margin-right: 10px; text-align: right; margin-left: auto;margin-top: 4px; '>
 			<p style='margin-bottom: 0px;'><span name='price' id='price$service->ID'>$price</span> ₽</p>
-			<small style='display:flex;'><span style='margin-right:2px; margin-left: auto;' name='itog' id='itog$service->ID'>0</span> ₽</small>
+			<small style='display:none;'><span style='margin-right:2px; margin-left: auto;' name='itog' id='itog$service->ID'>0</span> ₽</small>
 			</div>
 			<div style='display:flex; height: 50px;'>
 			<button id='button$service->ID' style='width: 80px; margin:auto;padding-left: 10px; padding-right: 10px;' onclick='buttonclicked(\"$service->ID\")'>Добавить</button>
@@ -316,7 +317,15 @@ class WtServiceManager_
         {
             echo 'var message = "' . $param['contact-form-7_input_name'] . '";';
         }
-        echo 'function buttonclicked(from) {
+        echo '
+			var formatter = new Intl.NumberFormat("ru");
+			var itogs = document.getElementsByName("itog");
+			var kolvos = document.getElementsByName("kolvo");
+			var names = document.getElementsByName("name");
+			var all_itog = document.getElementById("all_itog");
+			var all_kolvo = document.getElementById("all_kolvo");
+		
+		function buttonclicked(from) {
 			document.getElementById("kolvo"+from).value= 1;
 			document.getElementById("kolvo"+from).style.display = "";
 			document.getElementById("button"+from).style.display = "none";
@@ -324,12 +333,7 @@ class WtServiceManager_
 			calculate(from);
 		}
 		function calculate(from) {
-			var formatter = new Intl.NumberFormat("ru");
-			var itogs = document.getElementsByName("itog");
-			var kolvos = document.getElementsByName("kolvo");
-			var names = document.getElementsByName("name");
-			var all_itog = document.getElementById("all_itog");
-			var all_kolvo = document.getElementById("all_kolvo");
+
 			var summ =	0;
 			var summ_kolvo = 0;
 			
@@ -364,6 +368,10 @@ class WtServiceManager_
 			document.getElementById("kolvo"+from).value = null;
 			document.getElementById("kolvo"+from).style.display = "none";
 			document.getElementById("button"+from).style.display = "";
+			document.getElementById("itog"+from).parentElement.style.display="none";
+			}
+			else{
+			document.getElementById("itog"+from).parentElement.style.display="flex";
 			}
 		}
 
